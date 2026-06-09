@@ -1,71 +1,90 @@
 # Chat Application
-A chat application developed in Java that allows users to register, log in, send messages, and view conversations. The project is being built incrementally, starting with a Core Java implementation and progressing toward a Spring Boot backend with database integration and real-time messaging capabilities.
 
-## Current Features
+A backend chat application built using Spring Boot, Spring Data JPA, Hibernate, and Oracle Database. The application allows users to register, log in, send messages, and view conversations through RESTful APIs.
+
+## Features
+
 * User Registration
 * User Login
 * Send Messages
 * View Conversations
 * Message Timestamp Tracking
-* Layered Architecture (Entity, Service, Main)
+* RESTful API Development
+* Layered Architecture (Controller, Service, Repository, Entity)
+* Database Persistence using Oracle
 
 ## Technologies Used
 
-### Current Version
-* Java
-* Object-Oriented Programming (OOP)
-* Collections Framework
-* LocalDateTime API
+### Backend
 
-### Planned Technologies
-* Oracle Database
-* JDBC
+* Java
 * Spring Boot
 * Spring Data JPA
-* Hibernate
-* REST APIs
-* WebSocket
+* Hibernate ORM
+* Maven
 
-## Application Workflow
-1. Register a new user.
-2. Login using email and password.
-3. Send messages to registered users.
-4. View conversations between users.
-5. Logout from the application.
+### Database
+
+* Oracle Database
+
+### API Testing
+
+* Postman
+
+## Project Structure
+
+* **Controller Layer** – Handles HTTP requests and responses.
+* **Service Layer** – Contains business logic.
+* **Repository Layer** – Performs database operations using JPA.
+* **Entity Layer** – Represents database tables.
+* **DTO Layer** – Transfers data between client and server.
+
+## REST APIs
+
+### User APIs
+
+* Register User
+* Login User
+
+### Message APIs
+
+* Send Message
+* View Conversation
 
 ## Concepts Practiced
 
-* Classes and Objects
-* Encapsulation
-* Service-Based Design
-* Collections
-* User Authentication
-* Business Logic Implementation
-* Date and Time Handling
+* Spring Boot
+* Dependency Injection
+* REST API Development
+* Spring Data JPA
+* Hibernate ORM
+* Entity Mapping
+* DTO Design Pattern
+* Repository Pattern
+* Database Integration
+* Layered Architecture
 
 ## Future Enhancements
 
-* Persist data using Oracle Database
-* JDBC Integration
-* Spring Boot REST API Implementation
-* JPA/Hibernate Integration
-* DTO and Exception Handling
-* Real-Time Messaging with WebSocket
-* Group Chat Functionality
-* User Search and Profile Management
+* Inbox API
+* Message Search
+* User Profile Management
+* Global Exception Handling
+* Spring Security & JWT Authentication
+* WebSocket-based Real-Time Messaging
+* Group Chat Support
 
-## Learning Goals
+## Learning Outcomes
 
-This project is designed to strengthen understanding of:
+This project helped strengthen understanding of:
 
-* Core Java
-* Database Integration
-* Spring Boot
-* Hibernate & JPA
-* RESTful API Development
-* Real-Time Communication
+* Spring Boot Fundamentals
+* JPA and Hibernate
+* ORM Concepts
+* RESTful Web Services
+* Database Design
+* Backend Application Development
 
 ## Author
 
-Kethzia
-
+**Kethzia**
