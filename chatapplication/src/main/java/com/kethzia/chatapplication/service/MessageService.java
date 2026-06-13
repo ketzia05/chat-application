@@ -1,6 +1,9 @@
 package com.kethzia.chatapplication.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -46,17 +49,124 @@ public class MessageService {
 	    return messageRepository.save(message);
 	}
 	
-	public List<Message> viewConversation(ConversationDto dto) {
+	public List<Message> getInbox(String email) {
 
-	    User sender = userRepository.findByEmail(dto.getSenderEmail());
+	    User user = userRepository.findByEmail(email);
 
-	    User receiver = userRepository.findByEmail(dto.getReceiverEmail());
-
-	    if(sender == null || receiver == null) {
+	    if(user == null) {
 	        throw new RuntimeException("User not found");
 	    }
 
-	    return messageRepository.findBySenderIdAndReceiverId(sender.getUserId(), receiver.getUserId());
+	    List<Message> messages = messageRepository.findByReceiverId(user.getUserId());
+
+	    messages.sort(Comparator.comparing(Message::getSentTime).reversed());
+
+	    return messages;
 	}
 	
+	public void deleteMessage(Integer messageId) {
+
+	    if(!messageRepository.existsById(messageId)) {
+	        throw new RuntimeException("Message not found");
+	    }
+
+	    messageRepository.deleteById(messageId);
+	}
+	
+	public Message updateMessage(Integer messageId, String content) {
+		if(!messageRepository.existsById(messageId)) {
+			throw new RuntimeException("Message not found");
+		}
+		
+		Message message = messageRepository.findByMessageId(messageId);
+		
+		message.setContent(content);
+		message.setSentTime(LocalDateTime.now());
+		
+		return messageRepository.save(message);
+	}
+	
+	public List<Message> viewConversation(ConversationDto dto){
+
+	    User sender =
+	            userRepository.findByEmail(
+	                    dto.getSenderEmail());
+
+	    User receiver =
+	            userRepository.findByEmail(
+	                    dto.getReceiverEmail());
+
+	    if(sender==null || receiver==null){
+	        throw new RuntimeException(
+	                "User not found");
+	    }
+
+	    List<Message> messages =
+	    		messageRepository
+	    		.findBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderBySentTimeAsc(
+	    		        sender.getUserId(),
+	    		        receiver.getUserId(),
+	    		        receiver.getUserId(),
+	    		        sender.getUserId()
+	    		);
+
+	    		for(Message m : messages){
+
+	    		    User s =
+	    		    userRepository.findById(
+	    		            m.getSenderId()
+	    		    ).orElse(null);
+
+	    		    User r =
+	    		    userRepository.findById(
+	    		            m.getReceiverId()
+	    		    ).orElse(null);
+
+	    		    if(s!=null){
+	    		        m.setSenderEmail(
+	    		                s.getEmail()
+	    		        );
+	    		    }
+
+	    		    if(r!=null){
+	    		        m.setReceiverEmail(
+	    		                r.getEmail()
+	    		        );
+	    		    }
+	    		}
+
+	    		return messages;
+		}
+	
+	public List<String> getConversationUsers(String email){
+
+	    User currentUser = userRepository.findByEmail(email);
+
+	    if(currentUser == null){
+	        throw new RuntimeException("User not found");
+	    }
+	    
+	    List<Message> messages = messageRepository.findBySenderIdOrReceiverId(
+	                            currentUser.getUserId(),
+	                            currentUser.getUserId());
+
+	    messages.sort(Comparator.comparing(Message::getSentTime).reversed());
+
+	    LinkedHashSet<String> users = new LinkedHashSet<>();
+
+	    for(Message msg:messages){
+
+	        Integer id = msg.getSenderId().equals(currentUser.getUserId()) ? msg.getReceiverId() : msg.getSenderId();
+
+	        User u= userRepository.findById(id).orElse(null);
+
+	        if(u!=null){
+	        	users.add(u.getEmail());
+	        }
+	    }
+
+	    return new ArrayList<>(
+	            users
+	    );
+	}
 }

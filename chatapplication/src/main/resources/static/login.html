@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Application — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/login.css" />
+</head>
+<body>
+
+  <!-- Ambient orbs — same as register -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="page-wrapper">
+
+    <!-- Brand -->
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+      <span class="brand-name">Chat Application</span>
+    </div>
+
+    <!-- Glass card -->
+    <div class="card">
+
+      <!-- Success overlay -->
+      <div class="success-overlay" id="successOverlay" role="status" aria-live="polite">
+        <div class="success-checkmark">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <div>
+          <p class="success-title">Welcome back!</p>
+          <p class="success-subtitle" id="successSubtitle">Signed in successfully. Redirecting you now…</p>
+        </div>
+        <div class="redirect-bar">
+          <div class="redirect-progress" id="redirectProgress"></div>
+        </div>
+      </div>
+
+      <!-- Form wrapper -->
+      <div id="formWrapper">
+        <div class="card-header">
+          <h1 class="card-title">Welcome back</h1>
+          <p class="card-subtitle">Sign in to continue chatting.</p>
+        </div>
+
+        <!-- Global error / info alert -->
+        <div class="alert alert-error" id="globalError" role="alert" aria-live="assertive">
+          <span class="alert-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </span>
+          <span id="globalErrorMsg"></span>
+        </div>
+
+        <form class="form" id="loginForm" novalidate>
+
+          <!-- Email -->
+          <div class="field">
+            <label class="field-label" for="email">Email address</label>
+            <div class="input-wrapper">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="john@example.com"
+                autocomplete="email"
+                spellcheck="false"
+              />
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+            <div class="field-error" id="emailError">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span class="field-error-msg"></span>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="field">
+            <div class="field-label-row">
+              <label class="field-label" for="password">Password</label>
+              <a href="#" class="forgot-link" tabindex="0">Forgot password?</a>
+            </div>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                class="has-toggle"
+              />
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <button type="button" class="toggle-password" id="togglePassword" aria-label="Show password">
+                <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+            <div class="field-error" id="passwordError">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span class="field-error-msg"></span>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn-login" id="loginBtn">
+            <div class="spinner" id="spinner"></div>
+            <span class="btn-text">Sign In</span>
+          </button>
+
+        </form>
+
+        <p class="privacy-note">
+          Protected by end-to-end encryption. Your data stays private.
+        </p>
+      </div><!-- /formWrapper -->
+
+    </div><!-- /card -->
+
+    <div class="card-footer">
+      Don't have an account? <a href="register.html">Create one free</a>
+    </div>
+
+  </div><!-- /page-wrapper -->
+
+  <script src="js/login.js"></script>
+</body>
+</html>

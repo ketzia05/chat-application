@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Application — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/chat.css" />
+</head>
+<body>
+
+  <!-- Ambient orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- ═══════════════════════════════════════════
+       TOAST CONTAINER
+  ════════════════════════════════════════════ -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- ═══════════════════════════════════════════
+       EDIT MODAL
+  ════════════════════════════════════════════ -->
+  <div class="modal-backdrop" id="editModalBackdrop">
+    <div class="modal" id="editModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Edit Message</h2>
+        <button class="modal-close" id="modalCloseBtn" aria-label="Close">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label class="field-label" for="editContent">Message</label>
+          <div class="textarea-wrapper">
+            <textarea id="editContent" class="glass-textarea" rows="4" placeholder="Edit your message…"></textarea>
+          </div>
+          <div class="field-error" id="editContentError">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span class="field-error-msg"></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" id="modalCancelBtn" type="button">Cancel</button>
+        <button class="btn-primary" id="updateMsgBtn" type="button">
+          <span class="spinner" id="updateSpinner"></span>
+          <span class="btn-text">Update Message</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       DELETE CONFIRM MODAL
+  ════════════════════════════════════════════ -->
+  <div class="modal-backdrop" id="deleteModalBackdrop">
+    <div class="modal modal-sm" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+      <div class="modal-header">
+        <h2 class="modal-title" id="deleteModalTitle">Delete Message</h2>
+        <button class="modal-close" id="deleteModalCloseBtn" aria-label="Close">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="confirm-text">Are you sure you want to delete this message? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" id="deleteCancelBtn" type="button">Cancel</button>
+        <button class="btn-danger" id="confirmDeleteBtn" type="button">
+          <span class="spinner" id="deleteSpinner"></span>
+          <span class="btn-text">Delete</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       APP SHELL — 3-column layout
+  ════════════════════════════════════════════ -->
+  <div class="app-shell">
+
+    <!-- ══════════════════════════════
+         COL 1 — APP SIDEBAR (nav + user)
+    ═══════════════════════════════════ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-inner">
+
+        <!-- Brand -->
+        <div class="sidebar-brand">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <span class="brand-name">Chat App</span>
+        </div>
+
+        <!-- Nav -->
+        <nav class="sidebar-nav" aria-label="Dashboard sections">
+          <button class="nav-item active" data-panel="chat">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span>Messages</span>
+          </button>
+          <button class="nav-item" data-panel="inbox">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+            <span>Inbox</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-spacer"></div>
+
+        <!-- User card -->
+        <div class="user-card">
+          <div class="user-avatar" id="userAvatar">?</div>
+          <div class="user-info">
+            <p class="user-name" id="sidebarUserName">User</p>
+            <p class="user-email" id="sidebarUserEmail">—</p>
+          </div>
+        </div>
+
+        <!-- Logout -->
+        <button class="btn-logout" id="logoutBtn" type="button">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Log out</span>
+        </button>
+
+      </div>
+    </aside>
+
+    <!-- Mobile top bar -->
+    <header class="topbar" id="topbar">
+      <button class="topbar-menu" id="menuToggle" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-brand">
+        <div class="brand-icon brand-icon-sm">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <span class="brand-name" id="topbarTitle">Messages</span>
+      </div>
+      <div class="topbar-user-avatar" id="topbarAvatar">?</div>
+    </header>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ══════════════════════════════
+         MAIN CONTENT
+    ═══════════════════════════════════ -->
+    <div class="main-content" id="mainContent">
+
+      <!-- ══════════════════════════════
+           PANEL: CHAT (conversations list + chat window)
+      ═══════════════════════════════════ -->
+      <div class="panel panel-chat" id="panel-chat" data-panel="chat">
+
+        <!-- ── COL 2: Conversation list ── -->
+        <div class="conv-list-col" id="convListCol">
+
+          <!-- Header -->
+          <div class="conv-list-header">
+            <h2 class="conv-list-title">Messages</h2>
+            <button class="btn-icon-round" id="refreshConvsBtn" title="Refresh conversations">
+              <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.06-4.49"/></svg>
+            </button>
+          </div>
+
+          <!-- Search -->
+          <div class="conv-search-wrap">
+            <input
+              type="text"
+              id="convSearch"
+              class="conv-search"
+              placeholder="Search conversations…"
+              autocomplete="off"
+            />
+            <svg class="conv-search-icon" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </div>
+
+          <!-- List -->
+          <div class="conv-list" id="convList">
+            <div class="conv-list-empty" id="convListEmpty">
+              <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <p>No conversations yet.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ── COL 3: Chat window ── -->
+        <div class="chat-col" id="chatCol">
+
+          <!-- No conversation selected -->
+          <div class="chat-placeholder" id="chatPlaceholder">
+            <div class="chat-placeholder-inner">
+              <div class="chat-placeholder-icon">
+                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <p class="chat-placeholder-title">Select a conversation</p>
+              <p class="chat-placeholder-sub">Choose someone from the left to start chatting.</p>
+            </div>
+          </div>
+
+          <!-- Active conversation -->
+          <div class="chat-active hidden" id="chatActive">
+
+            <!-- Chat top bar -->
+            <div class="chat-topbar">
+              <!-- Back button (mobile) -->
+              <button class="chat-back-btn" id="chatBackBtn" aria-label="Back to conversations">
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <div class="chat-peer-avatar" id="chatPeerAvatar">?</div>
+              <div class="chat-peer-info">
+                <p class="chat-peer-name" id="chatPeerName">—</p>
+                <p class="chat-peer-email" id="chatPeerEmail">—</p>
+              </div>
+              <button class="btn-icon-round ml-auto" id="reloadChatBtn" title="Reload messages">
+                <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.06-4.49"/></svg>
+              </button>
+            </div>
+
+            <!-- Messages -->
+            <div class="chat-window" id="chatWindow">
+              <div class="chat-empty" id="chatEmpty">
+                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <p>No messages yet. Say hello!</p>
+              </div>
+              <div class="chat-messages" id="chatMessages"></div>
+            </div>
+
+            <!-- Compose bar -->
+            <div class="compose-bar">
+              <textarea
+                id="composeInput"
+                class="compose-textarea"
+                placeholder="Write a message…"
+                rows="1"
+              ></textarea>
+              <button class="compose-send-btn" id="composeSendBtn" type="button" aria-label="Send message">
+                <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+
+          </div><!-- /chatActive -->
+
+        </div><!-- /chatCol -->
+
+      </div><!-- /panel-chat -->
+
+      <!-- ══════════════════════════════
+           PANEL: INBOX
+      ═══════════════════════════════════ -->
+      <div class="panel panel-inbox hidden" id="panel-inbox" data-panel="inbox">
+        <div class="inbox-panel-inner">
+
+          <div class="panel-header">
+            <h1 class="panel-title">Inbox</h1>
+            <p class="panel-subtitle">All messages you've received.</p>
+          </div>
+
+          <div class="glass-card">
+            <div class="form-actions">
+              <button class="btn-secondary" id="loadInboxBtn" type="button">
+                <span class="spinner" id="inboxSpinner"></span>
+                <span class="btn-text">
+                  <svg viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+                  Load Inbox
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div class="inbox-list" id="inboxList">
+            <div class="inbox-empty" id="inboxEmpty">
+              <svg viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+              <p>Click "Load Inbox" to fetch your messages.</p>
+            </div>
+            <div id="inboxMessages"></div>
+          </div>
+
+        </div>
+      </div><!-- /panel-inbox -->
+
+    </div><!-- /main-content -->
+
+  </div><!-- /app-shell -->
+
+  <script src="js/chat.js"></script>
+</body>
+</html>

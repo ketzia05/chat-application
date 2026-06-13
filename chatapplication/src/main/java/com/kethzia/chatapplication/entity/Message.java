@@ -20,8 +20,11 @@ public class Message {
 
     private LocalDateTime sentTime;
 
-    public Message() {
-    }
+    @Transient
+    private String senderEmail;
+
+    @Transient
+    private String receiverEmail;
 
     public Message(Integer senderId, Integer receiverId,
                    String content, LocalDateTime sentTime) {
@@ -30,7 +33,27 @@ public class Message {
         this.content = content;
         this.sentTime = sentTime;
     }
+    
+    public Message() {
+    	
+    }
 
+    public String getSenderEmail() {
+        return senderEmail;
+    }
+
+    public void setSenderEmail(String senderEmail) {
+        this.senderEmail = senderEmail;
+    }
+
+    public String getReceiverEmail() {
+        return receiverEmail;
+    }
+
+    public void setReceiverEmail(String receiverEmail) {
+        this.receiverEmail = receiverEmail;
+    }
+    
 	public Integer getMessageId() {
 		return messageId;
 	}
